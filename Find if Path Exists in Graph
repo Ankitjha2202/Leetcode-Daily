@@ -1,0 +1,26 @@
+class Solution {
+public:
+  bool dfs(vector<int> adj[],vector<int> &vis,int s,int d){
+      if(s==d){
+          return true;
+      }
+      vis[s]=1;
+      for(auto &it:adj[s]){
+         if(!vis[it]){
+             if(dfs(adj,vis,it,d)){
+                 return true;
+             }
+         }
+      }
+      return false;
+  }
+    bool validPath(int n, vector<vector<int>>& edges, int s, int d) {
+        vector<int> adj[n];
+        for(auto &it:edges){
+            adj[it[0]].push_back(it[1]);
+            adj[it[1]].push_back(it[0]);
+        }
+        vector<int> vis(n,0);
+        return dfs(adj,vis,s,d);
+    }
+};
