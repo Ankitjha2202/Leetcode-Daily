@@ -1,0 +1,32 @@
+class Solution {
+public:
+   bool bipartiteDfs(int node, vector<int> adj[], int color[]) {
+    for(auto it : adj[node]) {
+        if(color[it] == -1) {
+            color[it] = 1 - color[node];
+            if(!bipartiteDfs(it, adj, color)) {
+                return false; 
+            }
+        } else if(color[it] == color[node]) return false; 
+    }
+    return true; 
+    }
+    bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+        vector<int> adj[n];
+        for(auto &it:dislikes){
+            adj[it[0]-1].push_back(it[1]-1);
+            adj[it[1]-1].push_back(it[0]-1);
+        } 
+        int color[n];
+        memset(color, -1, sizeof color); 
+        for(int i=0;i<n;i++) {
+           if(color[i] == -1) {
+              color[i] = 1;
+              if(!bipartiteDfs(i, adj, color)) {
+                return false;
+              }
+         } 
+      }
+      return true; 
+    }
+};
