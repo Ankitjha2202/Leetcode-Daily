@@ -1,0 +1,47 @@
+//DFS SOLUTION 
+class Solution {
+public:
+    void dfs(vector<vector<int>> graph,vector<vector<int>> &ans,vector<int> &temp,int node){
+       if(node==graph.size()-1){
+           ans.push_back(temp);
+       }
+       for(auto it:graph[node]){
+           temp.push_back(it);
+           dfs(graph,ans,temp,it);
+           temp.pop_back();
+       }
+    }
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+        vector<vector<int>> ans;
+        int n=graph.size();
+        vector<int> temp;
+        temp.push_back(0);
+        dfs(graph,ans,temp,0);
+        return ans;
+    }
+};
+//BFS SOLUTION
+class Solution {
+public:
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+        int n=graph.size();
+        vector<vector<int>> ans;
+        queue<vector<int>> q;
+        q.push({0});
+        while(!q.empty()){
+            vector<int> temp=q.front();
+            q.pop();
+            int val=temp.back();
+            if(val==n-1){
+               ans.push_back(temp);
+            }else{
+              for(int i:graph[val]){
+                vector<int> newpath(temp);
+                newpath.push_back(i);
+                q.push(newpath);
+            }
+          }
+        }
+        return ans;
+    }
+};
