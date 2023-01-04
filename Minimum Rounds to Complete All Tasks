@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int minimumRounds(vector<int>& tasks) {
+        int n=tasks.size();
+        sort(tasks.begin(),tasks.end());
+        int count=0;
+        int i=0;
+        while(i<n){
+            int key=tasks[i];
+            unordered_map<int,int> mp;
+            while(i<n && tasks[i]==key){
+                mp[tasks[i]]++;
+                i++;
+            }
+            if(mp[key]<2){
+                return -1;
+            }else{
+                count+=ceil(mp[key]/3.0);
+            }
+        }
+        return count;
+    }
+};
