@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+       unordered_map<TreeNode*,int> cnt;
+       if(root==NULL){
+            return {};
+       }
+        stack<TreeNode*> s;
+        s.push(root);
+        vector<int> ans;
+        while(!s.empty()){
+            TreeNode* cur=s.top();
+            if(s.top()==NULL){
+                s.pop();
+                continue;
+            }
+            if(cnt[cur]==0)ans.push_back(cur->val);
+            else if(cnt[cur]==1)s.push(cur->left);
+            else if(cnt[cur]==2)s.push(cur->right);
+            else s.pop();
+            cnt[cur]++;
+        }
+        return ans;
+    }
+};
