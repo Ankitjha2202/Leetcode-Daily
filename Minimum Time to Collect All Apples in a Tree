@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
+        int t = 0;
+        vector<bool>done(n,0);
+        int n1 = edges.size()+1;
+        int i,j;
+        vector<vector<int>>g(n,vector<int>(0,0));
+        for(i=0;i<n-1;i++){
+            g[edges[i][1]].push_back(edges[i][0]);
+            g[edges[i][0]].push_back(edges[i][1]);
+        }
+        done[0]=1;
+        for(i=1;i<n;i++){
+            if(hasApple[i]==1 and done[i]==0){
+                j=i;
+                while(j>0 and done[j]==0){
+                    done[j]=1;
+                    t+=2;
+                    j = g[j][0];
+                }
+            }
+        }
+        return t;
+    }
+};
