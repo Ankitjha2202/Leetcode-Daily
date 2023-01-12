@@ -1,0 +1,32 @@
+class Solution {
+public:
+    
+    int dfs(int node, vector<int> adj[], vector<bool>& vis, char c, string& labels, vector<int>& ans, vector<int>& fre){
+        vis[node] = true;
+        int prev = fre[labels[node]-'a'];
+        fre[labels[node]-'a']++;
+        for(auto it: adj[node]){
+            if(!vis[it]){
+                int cnt1 = dfs(it, adj, vis, labels[node], labels, ans, fre);
+                ans[node] += cnt1;
+            }
+        }
+        ans[node] = fre[labels[node]-'a'] - prev;
+        return ans[node];
+    }
+
+    vector<int> countSubTrees(int n, vector<vector<int>>& edges, string labels) {
+        vector<int> adj[n];
+        vector<bool> vis(n,false);
+        vector<int> ans(n,1);
+        vector<int> fre(26,0);
+        for(int i=0;i<edges.size();i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        int tt = dfs(0, adj, vis, labels[0], labels, ans, fre);
+        return ans;
+    }
+};
