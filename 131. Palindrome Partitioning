@@ -1,0 +1,33 @@
+class Solution {
+public:
+    bool palindrom(int i,int j,string s){
+        while(i<=j){
+            if(s[i]!=s[j]){
+                return false;
+            }else{
+                i++;
+                j--;
+            }
+        }
+        return true;
+    }
+    void backtracking(vector<vector<string>> &ans,string s,int ind,vector<string> temp){
+        if(ind==s.size()){
+            ans.push_back(temp);
+            return;
+        }
+        for(int i=ind;i<s.size();i++){
+             if(palindrom(ind,i,s)){
+                 temp.push_back(s.substr(ind,i-ind+1));
+                 backtracking(ans,s,i+1,temp);
+                 temp.pop_back();
+             }
+        }
+    }
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> ans;
+        vector<string> temp;
+        backtracking(ans,s,0,temp);
+        return ans;
+    }
+};
