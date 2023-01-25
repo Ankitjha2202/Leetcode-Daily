@@ -1,0 +1,25 @@
+class Solution {
+public:
+    void bfs(vector<int>& edges,vector<int>&distances,int source){
+        distances[source]=0;
+        int count=0;
+        while(edges[source]!=-1 && distances[edges[source]]==INT_MAX){
+            distances[edges[source]]=++count;
+            source=edges[source];
+        }
+    }
+    int closestMeetingNode(vector<int>& edges, int node1, int node2) {
+        int n=edges.size();
+        vector<int> v1(n,INT_MAX),v2(n,INT_MAX);
+        bfs(edges,v1,node1);
+        bfs(edges,v2,node2);
+        int res=-1,curr_min=INT_MAX;
+        for(int i=0;i<n;i++){
+            if(curr_min>max(v1[i],v2[i])){
+                res=i;
+                curr_min=max(v1[i],v2[i]);
+            }
+        }
+        return res;
+    }
+};
