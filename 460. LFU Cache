@@ -1,0 +1,135 @@
+struct Node{
+    //defining node for DLL
+    int key,val,cnt;
+    Node* nxt;
+    Node* prv;
+    Node(int _key, int _val){//constructor for init
+        key=_key;
+        val=_val;
+        cnt=1;//curr freq 1
+    }
+};
+
+struct List{
+    //create a list
+    int sz;//size, at every moment
+    Node* head;
+    Node *tail;
+    List(){
+        head = new Node(0,0);//dummy values
+        tail = new Node(0,0);
+        //init config
+        head->nxt= tail;
+        tail->prv= head;
+        sz=0;//current size 0
+    }
+    
+    void addFront(Node * node){
+         //added right after head
+        Node* temp = head->nxt; //temp node after head
+
+         //inserting newNode between head and temp
+        node->nxt = temp;
+        node->prv = head;
+        head->nxt = node;
+        temp->prv = node;
+        sz++;//when we add in front we incre size
+    }
+    
+    void deleteNode(Node* delNode){
+        Node* delPrev = delNode->prv; //creating a node before target node
+        Node* delNext = delNode->nxt; //creating a node after target node
+
+        //connecting both
+        delPrev->nxt = delNext; 
+        delNext->prv = delPrev;
+        sz--;//size will decrease
+    }
+
+};
+
+class LFUCache {
+    //main map is keyNote
+    map<int, Node*> keyNote;//will have value with node address
+    //freq map is freqList
+    map<int, List*> freqList;//will have frequecy with list of nodes
+    int mxSzCache;//maximum sz of cache we can have
+    int minFreq;//the minimum frequency
+    int curSz;//current size of cache
+public:
+    LFUCache(int capacity) {
+        mxSzCache=capacity;
+        minFreq=0;
+        curSz=0;
+    }
+    
+    void updateFreqMp(Node* node){
+        keyNote.erase(node->key);//erasing from main map
+        //then deleting in the frequency map
+        freqList[node->cnt]->deleteNode(node);//accessing the freq by cnt and performing delete operation
+        if(node->cnt == minFreq and freqList[node->cnt]->sz==0){
+            //if that node's count is minimum frequency and after removal list size becomes 0
+            minFreq++;//next freq will be least frequency
+        }
+        
+        List * nxtHigherFreqList = new List();//creating next higher freq list
+        
+        if(freqList.find(node->cnt+1)!= freqList.end()){//if next frequency exists in freqList ma
+            nxtHigherFreqList = freqList[node->cnt+1];//initialize with this
+        }
+        //list with higher freq is ready
+        node->cnt +=1;//increasing the node's count
+        nxtHigherFreqList->addFront(node);//insert in list's starting
+        freqList[node->cnt] = nxtHigherFreqList;//modified freq map
+        keyNote[node->key]=node;//assingning it to main map back again
+    }
+    
+    int get(int key) {
+        if(keyNote.find(key)!=keyNote.end()){//is present in main map
+            Node* node = keyNote[key];//getting the node
+            int ans = node->val;//getting value
+            updateFreqMp(node);//updating frequency map
+            return ans;
+        }
+        return -1;//if it is ot present in main map
+    }
+    
+    void put(int key, int value) {
+        if(mxSzCache==0){//base case 
+            return;
+        }
+        if(keyNote.find(key)!=keyNote.end()){//if already present
+            Node * node = keyNote[key];// where that node exists in keyNote map
+            node->val=value;//getting the value
+            updateFreqMp(node);//updating in freq map
+        }
+        else{//if not exists
+            if(curSz==mxSzCache){//no more space
+                List * list = freqList[minFreq];//getting list of minimum frequency
+                keyNote.erase(list->tail->prv->key);//performing lru in lfu, erase it from main map
+                freqList[minFreq]->deleteNode(list->tail->prv);//deleting lru in freq list with min freq
+                curSz--;//size of list, minfreq
+            }
+            curSz++;//as we inserting a new element
+            //when we didn't find ele in main map, we have to enter new element
+            //everytime a new element comes we have minimum frequency as 1
+            minFreq=1;
+            List * listFreq = new List();//creating a new list, as we have to insert a new element
+            if(freqList.find(minFreq)!= freqList.end()){//if already present in freq map
+                listFreq = freqList[minFreq];//then updating list with pre existing list
+            }
+            //creating a new node
+            Node* node = new Node(key, value);
+            listFreq->addFront(node);//inserting at front
+            keyNote[key]= node;//store addr at main map
+            freqList[minFreq]= listFreq;//init list at corresponding freq
+        }
+    }
+};
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache* obj = new LFUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
