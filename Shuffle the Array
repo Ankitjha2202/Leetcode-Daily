@@ -1,0 +1,17 @@
+class Solution {
+public:
+    vector<int> shuffle(vector<int>& nums, int n) {
+        vector<int> ans(2*n,0);
+        int k=0,j=n;
+        for(int i=0;i<2*n;i++){
+            if(i%2==0){
+                ans[i]=(nums[k]);
+                k++;
+            }else{
+                ans[i]=nums[j];
+                j++;
+            }
+        }
+        return ans;
+    }
+};
