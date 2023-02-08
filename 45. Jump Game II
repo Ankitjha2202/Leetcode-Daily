@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int n=nums.size();
+        for(int i=1;i<n;i++){
+            nums[i]=max(nums[i-1],nums[i]+i);
+        }
+        int ans=0,curr_reach=0;
+        while(curr_reach<n-1){
+            ans++;
+            curr_reach=nums[curr_reach];
+        }
+        return ans;
+    }
+};
