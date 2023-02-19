@@ -1,0 +1,38 @@
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+         //it is just a level order traversal and we just have to change the flag 
+       //while we are traversing the even level
+       vector<vector<int>> ans;
+        if(root==NULL){
+           return ans;
+        }
+        queue<TreeNode*> q;
+        q.push(root);
+        bool flag=true;
+        while(!q.empty()){
+            int s=q.size();
+            vector<int> ans1(s);
+            for(int i=0;i<s;i++){
+            TreeNode* node=q.front();
+            q.pop();
+                int index;
+             if(flag)
+               index=i;  
+                else{
+                    index=s-i-1;
+                }
+                ans1[index]=node->val;
+              if(node->left){
+                  q.push(node->left);
+              }
+              if(node->right){
+                  q.push(node->right);
+              }
+            }
+            flag=!flag;
+            ans.push_back(ans1);
+        }
+        return ans;
+    }
+};
