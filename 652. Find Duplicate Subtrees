@@ -1,0 +1,25 @@
+class Solution {
+public:
+    string solve(unordered_map<string,int> &cnt,TreeNode* root,vector<TreeNode*> &ans){
+        if(root==NULL){
+            return "";
+        }
+        string l=solve(cnt,root->left,ans);
+        string r=solve(cnt,root->right,ans);
+        string s= "(" + l + to_string(root->val) + r + ")";
+        if(cnt[s]!=-1){
+            cnt[s]++;
+        } 
+        if(cnt[s]>1){
+            ans.push_back(root);
+            cnt[s]=-1;
+        }
+        return s;
+    }
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        vector<TreeNode*> ans;
+        unordered_map<string,int> cnt;
+        solve(cnt,root,ans);
+        return ans;
+    }
+};
