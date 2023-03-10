@@ -1,0 +1,15 @@
+class Solution {
+public:
+    vector<int> ans;
+    Solution(ListNode* head) {
+       while(head!=NULL){
+            ans.push_back(head->val);
+            head=head->next;
+        }
+    }
+    
+    int getRandom() {
+        int i=rand()%ans.size();
+        return ans[i];
+    }
+};
