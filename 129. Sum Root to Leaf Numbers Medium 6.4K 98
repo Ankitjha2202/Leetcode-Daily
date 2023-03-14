@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int solve(TreeNode* root,int ans){
+        if(root->left==NULL && root->right==NULL){
+            ans=ans*10+root->val;
+            return ans;
+        }
+        ans=ans*10 + root->val;
+        int left=0,right=0;
+        if(root->left){
+            left=solve(root->left,ans);
+        }
+        if(root->right){
+            right=solve(root->right,ans);
+        }
+        return left+right;
+       
+    }
+    int sumNumbers(TreeNode* root) {
+        int ans=0;
+        return solve(root,ans);
+        // return ans;
+    }
+};
