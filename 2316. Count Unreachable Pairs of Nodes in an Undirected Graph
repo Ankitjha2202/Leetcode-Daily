@@ -1,0 +1,40 @@
+class Solution {
+public:
+    long long dfs(int start, vector<bool> &visited, vector<int> adj[]){
+        visited[start] = 1;
+        int res = 1;
+        for(auto i : adj[start]){
+            if(!visited[i]){
+                res += dfs(i, visited, adj);
+            }
+        }
+        return res;
+    }
+public:
+    long long countPairs(int n, vector<vector<int>>& edges) {
+        vector<int> graph[n];
+        vector<int>compare;
+        vector<bool>visited(n,false);
+        for(auto e : edges){
+            graph[e[0]].push_back(e[1]);
+            graph[e[1]].push_back(e[0]);
+        }
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                long long result = dfs(i, visited,graph);
+                compare.push_back(result);
+            }
+        }
+        int size = compare.size();
+        vector<int> suffixvar(size , 0);
+        suffixvar[size-1] = 0;
+        for(int i = size-2; i >= 0; i--){
+            suffixvar[i] = suffixvar[i+1] + compare[i+1];
+        }
+        long long resultnew = 0;
+        for(int i = 0; i < size; i++){
+            resultnew  += (compare[i]*1LL*suffixvar[i]);
+        }
+        return resultnew;
+    }
+};
